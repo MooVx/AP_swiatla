@@ -1,0 +1,112 @@
+/*@!Encoding:1250*/
+includes
+{
+  
+}
+
+variables
+{
+  //Ramka zawieraj¹ca czasy aktywnoœci poszczególnych faz i tablica domyœlnych czasów faz.
+  message Time t_msg;
+  int phase_time[6][2]={ {15,30}, {15,30}, {10,15}, {20, 20}, {15,35}, {15,35} };
+}
+
+on message Sensor
+{
+  // Algorytm wyznaczania czasów aktywnoœci faz
+  
+  if( this.N_E1==1 || this.N_E2==1 )
+  {
+    t_msg.t_S1 = calculate_time(this, phase_time[0][0], phase_time[0][1], 1);
+    t_msg.t_S2 = calculate_time(this, phase_time[1][0], phase_time[1][1], 2);
+  }
+  else
+  {
+    t_msg.t_S1 = 0;
+    t_msg.t_S2 = calculate_time(this, phase_time[1][0], phase_time[1][1], 2);
+  }
+  
+  t_msg.t_S3 = calculate_time(this, phase_time[2][0], phase_time[2][1], 3);
+  
+  
+  if( this.N_F1==1 || this.N_F2==1 )
+  {
+    t_msg.t_S4 = 20;
+  }
+  else
+  {
+    t_msg.t_S4 = 0;
+  }
+  
+  t_msg.t_S5 = calculate_time(this, phase_time[4][0], phase_time[4][1], 5);
+  t_msg.t_S6 = calculate_time(this, phase_time[5][0], phase_time[5][1], 6);
+    
+  output(t_msg);
+}
+
+
+//Funkcja wyliczajaca czas fazy w zale¿noœci od ruchu drogowego
+int calculate_time(message Sensor in, int t_min, int t_max, int phase)
+{
+  int k=-1;
+  
+  //Zmienna k opisuje natê¿enie ruchu, dla k=0 -> brak ruchu, dla k=3 -> du¿y ruch.
+  k = calculate_k(in,phase);
+  
+  if( k==0 ) return 0;
+  if( k==1 ) return t_min;
+  if( k==2 ) return ( t_min + (t_max - t_min)/2);
+  if( k==3 ) return t_max;
+  
+  return -1;
+}
+
+
+//Funkcja liczaca wartosc zmiennej k
+int calculate_k(message Sensor in, int phase)
+{
+  int n;
+  int max=0;
+  
+  //Dla róznych faz sprawdzamy rózne pasy. Zmienna n opisuje liczbe samochodów ktore oczekuja na przejazd,
+  //jest wyliczana jako maksimum z liczby aut na poszczegolnych pasach.
+  switch(phase)
+  {
+    case 1:
+      if( in.N_A2 > in.N_B2 )  n = in.N_A2;
+      else n = in.N_B2;
+      break;
+    
+    case 2:
+      if( in.N_A1 > in.N_A2 )  max = in.N_A1;
+      else max = in.N_A2;
+      if( in.N_B1 > max )  max = in.N_B1;
+      if( in.N_B2 > max )  max = in.N_B2;
+      n = max;
+      break;
+    
+    case 3:
+      if( in.N_A3 > in.N_B3 )  n = in.N_A3;
+      else n = in.N_B3;
+      break;
+      
+    case 5:
+      if( in.N_D1 > in.N_D2 )  n = in.N_D1;
+      else n = in.N_D2;
+      break;
+      
+    case 6:
+      if( in.N_C1 > in.N_C2 )  n = in.N_C1;
+      else n = in.N_C2;
+      break;      
+  }
+  
+  //W zaleznosci od zmiennej n wyznaczamy zmienn¹ k -> Im wiêcej samochodów tym d³u¿ej w³¹czamy dan¹ fazê œwiate³.
+  if( n==0 ) return 0;
+  if( n>=1 && n<=5) return 1;
+  if( n>=6 && n<=10) return 2;
+  if( n>=11 ) return 3;
+  
+  return -1;
+}
+
