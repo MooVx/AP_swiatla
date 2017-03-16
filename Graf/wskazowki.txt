@@ -1,3 +1,0 @@
-1) kolor fioletowy na grafach oznacza migaj¹ce œwiat³o zielone
-2) kolor szary oznacza œwiat³o niezaœwiecone, w zale¿noœci od po³o¿enia
-3) czasy T=0 do ustalenia
