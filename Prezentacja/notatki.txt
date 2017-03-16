@@ -1,0 +1,36 @@
+Etapy realizacji:
+•	Wybranie skrzyżowania Piastowska-Armii krajowej jako przykład modelowy
+•	Analiza ruchu na skrzyżowaniu oraz modyfikacja rzeczywistego skrzyżowania do modelu bezkolizyjnego
+•	Projekt sieci Can – podział na 3 moduły odpowiedzialne za określone zadania
+•	Praca cykliczna skrzyżowania – czyli taka która działa faza po fazie bez uwzględnienia ruchu
+•	Praca inteligentna tzn. taka która uwzględnia ruch na skrzyżowaniu i odpowiednio modyfikuję pracę sygnalizatorów
+•	Symulacja i testowanie w postaci sprawdzania różnych możliwych konfiguracji pracy
+•	Poprawienie drobnych błędów i czytelności kodu
+
+Podział zadań:
+	To co na slajdzie
+Schemat sieci CAN:
+•	W sieci 3 węzły odpowiadające za pracę cykliczną, pracę „inteligentną”, oraz moduł wysyłający informację o ilości samochodów na pasach ruchu
+Cykle pracy sygnalizatorów:
+•	W pracy sygnalizatorów możemy wyróżnić 6 cykli w których są zapalane poszczególne sygnalizatory tak aby ruch był bezkolizyjny
+•	Cykl 1 to taki, 2 taki ….
+Praca cykliczna:
+•	…
+Praca inteligentna:
+•	Aby ruch na skrzyżowaniu był kierowany w sposób optymalny musimy na podstawie natężenia ruchu na pasach zmieniać działanie sygnalizatorów aby nie doprowadzić do sytuacji w której pali się światło zielone a na danym pasie nie ma żadnego samochodu
+•	Osiągniecie tego realizujemy poprzez zmianę pracy cyklicznej na acykliczną
+•	Realizujemy to poprzez zmianę wydłużenie lub skrócenie czasu trwania sygnału zielonego gdy w kolejce czeka dużo lub mało aut lub poprzez pomijanie cykli gdy nie ma samochodów oczekujących na przejazd lub pieszych na przejściu
+Podejmowanie decyzji:
+•	Aby zrealizować tą funkcjonalność musimy analizować ruch
+•	W czasie trwania cyklu zbierane są informację o ruchu aby zadecydować co zrobić w następnym cyklu
+•	Sprawdzana jest ilość aut na pasach które powinny być włączone w kolejnym cyklu
+•	Sprawdzane są stany przycisków na przejściach dla pieszych
+•	Ustawiany jest czas trwania kolejnego cyklu: jeżeli nie ma samochodów/pieszych na pasach ruchu to czas ustawiany jest na 0 (pominiecie cyklu) jeśli samochodów jest od 1 do 4 to czas minimalny trwania cyklu, każde kilka samochodów zwiększa czas trwania sygnału zielonego o kilka sekund
+Ramki:
+•	W sieci wykorzystujemy do przesyłania informacji  ramki zawierające …
+•	
+Symulacja:
+•	Przygotowaliśmy graficzną symulację pracy skrzyżowania na której możemy zmieniać ilość samochodów w kolejce oraz stan przycisków na przejściach dla pieszych
+•	Dla przykładu zaprezentujemy reakcję sygnalizacji na sytuacje w której na przejściach dla pieszych nie ma oczekujących więc nie jest wcale uruchamiany cykl 1 w którym kierowcy jechali by tylko prosto i szli piesi
+•	Inny przypadek to np. taki w którym na tych pasach nie ma samochodów więc pali się dla nich ciągle światło zielone
+
