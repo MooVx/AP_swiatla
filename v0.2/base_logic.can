@@ -1,83 +1,77 @@
 /*@!Encoding:1250*/
 includes
 {
-  
+   #include "const.cin"
 }
 
 variables
 {
  msTimer mig;   //pedestrian blinking green lights timer 
  msTimer cycl;  //main cycle timer
- Timer req;     //request timer
+ timer req;
+
   
  message Display panel;   //frame to display state on panel
- int state=0;
+ message Time t_msg;
+ message Sensor sens;
+ message CONTROL ctrl_msg;
   
- // table of states : (20 state, 34 different signals to display ) 
- int dis[20][34]={{0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1},
-                  {0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1},
-                  {0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
-                  {0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1}};
+ int state=0;
 
-// table of states default time
- int T_stand[20]={8, 4, 1, 1,  8, 3, 1, 8,  3, 2, 7, 4,  1, 1, 8, 3,  1, 8, 3, 1};
- int T[20]={8, 4, 1, 1,  8, 3, 1, 8,  3, 2, 7, 4,  1, 1, 8, 3,  1, 8, 3, 1};
+ int T[28]={1, 8, 4, 1, 3, 1, 0, 1, 1, 8, 3, 1, 1, 8, 3, 1, 1, 7, 4, 1, 1, 8, 3, 1, 1, 8, 3, 1};
 
- int i=0,j=0;
+ int adv_work=0;
+
 }
 
 
-on message Time
-{
-  write("%d",this.t_S3);
-  if((!this.t_S1)&&(!this.t_S2)&&(!this.t_S3)&&(!this.t_S4)&&(!this.t_S5)&&(!this.t_S6)){
-    for(i=0;i<20;i++){
-      T[i]=T_stand[i];
-    }
-  }
-  else{
-    T[0]=this.t_S1;
-    T[4]=this.t_S2;
-    T[7]=this.t_S3;
-    T[10]=this.t_S4;
-    T[14]=this.t_S5;
-    T[17]=this.t_S6;
-    
-    setTimer(req,30);
-  }
-   write("Ustawiono czasy: S1:%d - S2:%d - S3:%d - S4:%d - S5:%d - S6:%d - ",T[0],T[4],T[7],T[10],T[14],T[17]);
-}
 
 on start
 {   
   // first call of timers at simulatoin start:
   setTimer(cycl,100); 
   setTimer(mig,50); 
+  ctrl_msg.byte(0)=0x11;  // 0b0001 0001  base_req & good signal
+  output(ctrl_msg);
+  
+}
+
+
+on message CONTROL
+{
+  ctrl_msg=this;
+  
+  
+  
+}
+
+on message Sensor
+{
+  sens=this;
+}
+
+on message Time
+{
+  t_msg=this;
+  time_message_parser(this);
+}
+
+
+
+on timer req
+{
+  adv_work=0;
+  ctrl_msg.byte(0)=0x04;   // 0b0000 0010  base_error
+  output(ctrl_msg);
 }
 
 on timer mig
 { 
-  if(state==2){     //green light should blink 
+  if(state==F1_S3){     //E green light should blink 
     panel.E_G^=1;   // modify signal E_green in frame panel ( toggle - XOR func.)
     output(panel);  //send message over CAN
   };
-  if(state==12){    //green light should blink 
+  if(state==F4_S3){    //E&F green light should blink 
     panel.E_G^=1;   // modify signal E_green in frame panel ( toggle - XOR func.)
     panel.F_G^=1;   // modify signal F_green in frame panel ( toggle - XOR func.)
     output(panel);  //send message over CAN
@@ -86,18 +80,166 @@ on timer mig
   setTimer(mig,100); //request 'mig' timer event after 100ms 
 }
 
-on timer req
-{
-  for(i=0;i<20;i++){
-    T[i]=T_stand[i];
-  }  
-  write("przywrócono czasy domyślne");
-}
+
 
 on timer cycl
 {
-  setTimer(cycl,500*T[state]);  //request 'mig' timer event after 500*T[state] ms
   
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  setTimer(cycl,500*T[state]);  //request 'mig' timer event after 500*T[state] ms
+
+  display_state(state);
+
+  
+  //
+  state++;  
+  if(state==20)
+    state=0;
+
+}
+
+int calc_state()
+{
+if(state==F1_S3){
+  if(T[state]>0)
+    return F1_S4;
+  else
+    return F1_S5;
+  
+}else if((state == F1_S4)||(state == F1_S6)){
+  if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else
+  	return F1_S1;
+  
+}else if(state == F2_S1){
+  if(panel.A2_G&&panel.B2_G)
+    return F2_S3;
+  else
+    return F2_S2;
+  
+}else if(state == F2_S2){
+  return F2_S4;
+  
+}else if(state == F2_S6){
+  if (t_msg.t_S3 > 0) 
+  	return F3_S1;
+  else if  (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if  (t_msg.t_S5 > 0)	
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else
+  	return F2_S1;
+}else if(state == F3_S4){
+  if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else
+  	return F3_S1;
+
+}else if(state == F4_S4){
+  if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else
+  	return F4_S1;
+  
+}else if(state == F5_S4){
+  if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else
+  	return F5_S1;
+  
+}else if(state == F6_S4){
+  if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else
+  	return F6_S1;
+
+}else
+  return state+1;
+
+}
+
+void time_message_parser(message Time th)
+{
+   int i=0,j=0;
+  if((!th.t_S1)&&(!th.t_S2)&&(!th.t_S3)&&(!th.t_S4)&&(!th.t_S5)&&(!th.t_S6)){
+    for(i=0;i<20;i++){
+      T[i]=T_stand[i];
+    }
+  }
+  else{
+    T[F1_S2]=th.t_S1;
+    T[F2_S4]=th.t_S2;
+    T[F3_S2]=th.t_S3;
+    T[F4_S2]=th.t_S4;
+    T[F5_S2]=th.t_S5;
+    T[F6_S2]=th.t_S6;
+    
+
+  }
+   write("Ustawiono czasy: S1:%d - S2:%d - S3:%d - S4:%d - S5:%d - S6:%d - ", T[F1_S2],
+                                                                              T[F2_S4],
+                                                                              T[F3_S2],
+                                                                              T[F4_S2],
+                                                                              T[F5_S2],
+                                                                              T[F6_S2]);
+}
+
+void display_state(int state)
+{
+   int i=0,j=0;  
   //parser, byte after byte writing raw data from dis[state] to panel message
   for(i=0;i<=4;i++){
     int temp=0;
@@ -110,14 +252,7 @@ on timer cycl
       }
     panel.byte(i)=temp;
   }
-
+  
   //send message 'panel' over CAN
   output(panel);
-  
-  //
-  state++;  
-  if(state==20)
-    state=0;
-
 }
-

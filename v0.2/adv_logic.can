@@ -6,13 +6,34 @@ includes
 
 variables
 {
-  //Ramka zawieraj¹ca czasy aktywnoœci poszczególnych faz i tablica domyœlnych czasów faz.
-  message Time t_msg;
+  int cnt=0;
+  timer control_time;
+  message Time t_msg;   //Ramka zawieraj¹ca czasy aktywnoœci poszczególnych faz i tablica domyœlnych czasów faz.
+  message Sensor current_sens;
+  message CONTROL ctrl;
   int phase_time[6][2]={ {15,30}, {15,30}, {10,15}, {20, 20}, {15,35}, {15,35} };
+  
 }
+on start
+{
+  setTimer(control_time,1);
+}
+
+on timer control_time
+{
+  if(cnt>1){
+    ctrl.byte(0)=0x44;   // 0b0100 0100  adv_error & off signal
+  } 
+  ctrl.byte(0)=0x21;  // 0b0010 0001  adv_req & good signal
+  output(ctrl);
+  setTimer(control_time,10);
+  cnt++;
+}
+
 
 on message Sensor
 {
+  current_sens=this;
   // Algorytm wyznaczania czasów aktywnoœci faz
   
   if( this.N_E1==1 || this.N_E2==1 )
@@ -41,9 +62,21 @@ on message Sensor
   t_msg.t_S5 = calculate_time(this, phase_time[4][0], phase_time[4][1], 5);
   t_msg.t_S6 = calculate_time(this, phase_time[5][0], phase_time[5][1], 6);
     
-  output(t_msg);
 }
 
+
+on message CONTROL
+{
+  
+  if(this._GOOD==1){
+    cnt=0;
+    setTimer(control_time,20);
+  }
+  if(this._BASE_REQUEST==1)
+    output(t_msg);
+  
+  
+}
 
 //Funkcja wyliczajaca czas fazy w zale¿noœci od ruchu drogowego
 int calculate_time(message Sensor in, int t_min, int t_max, int phase)

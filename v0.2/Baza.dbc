@@ -36,6 +36,15 @@ BS_:
 BU_: Sensor adv_logic basic_logic
 
 
+BO_ 0 CONTROL: 1 adv_logic
+ SG_ _OFF : 6|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ _ERR_ADV : 2|1@1+ (1,0) [0|0] ""  adv_logic,basic_logic,Sensor
+ SG_ _ADV_REQUEST : 5|1@1+ (1,0) [0|0] ""  adv_logic,basic_logic,Sensor
+ SG_ _ERR_SENSORS : 3|1@1+ (1,0) [0|0] ""  adv_logic,basic_logic,Sensor
+ SG_ _ERR_BASE : 1|1@1+ (1,0) [0|0] ""  adv_logic,basic_logic,Sensor
+ SG_ _BASE_REQUEST : 4|1@1+ (1,0) [0|0] ""  adv_logic,basic_logic,Sensor
+ SG_ _GOOD : 0|1@1+ (1,0) [0|0] ""  adv_logic,basic_logic,Sensor
+
 BO_ 2 Sensor: 8 Sensor
  SG_ N_E2 : 63|1@1+ (1,0) [0|0] ""  Sensor,adv_logic
  SG_ N_E1 : 62|1@1+ (1,0) [0|0] ""  Sensor,adv_logic
@@ -61,7 +70,7 @@ BO_ 1 Time: 7 adv_logic
  SG_ t_S1 : 8|8@1+ (1,0) [0|0] ""  Sensor,basic_logic
  SG_ Sum : 0|8@1+ (1,0) [0|0] ""  Sensor,basic_logic
 
-BO_ 0 Display: 5 adv_logic
+BO_ 3 Display: 5 adv_logic
  SG_ F_R : 33|1@1+ (1,0) [0|0] ""  Sensor,adv_logic,basic_logic
  SG_ F_G : 32|1@1+ (1,0) [0|0] ""  Sensor,adv_logic,basic_logic
  SG_ E_R : 31|1@1+ (1,0) [0|0] ""  Sensor,adv_logic,basic_logic
@@ -97,7 +106,8 @@ BO_ 0 Display: 5 adv_logic
  SG_ A1_Y : 1|1@1+ (1,0) [0|0] ""  Sensor,adv_logic,basic_logic
  SG_ A1_G : 0|1@1+ (1,0) [0|0] ""  Sensor,adv_logic,basic_logic
 
-BO_TX_BU_ 0 : basic_logic,adv_logic;
+BO_TX_BU_ 0 : Sensor,basic_logic,adv_logic;
+BO_TX_BU_ 3 : basic_logic,adv_logic;
 
 
 BA_DEF_  "BusType" STRING ;
