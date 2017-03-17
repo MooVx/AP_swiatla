@@ -61,11 +61,7 @@ on message Sensor
   
   t_msg.t_S5 = calculate_time(this, phase_time[4][0], phase_time[4][1], 5);
   t_msg.t_S6 = calculate_time(this, phase_time[5][0], phase_time[5][1], 6);
-  if((t_msg.t_S1 + t_msg.t_S2 + t_msg.t_S3 + t_msg.t_S4 + t_msg.t_S5 + t_msg.t_S6)>63)
-    t_msg.Sum=1;
-  else
-    t_msg.Sum = t_msg.t_S1 + t_msg.t_S2 + t_msg.t_S3 + t_msg.t_S4 + t_msg.t_S5 + t_msg.t_S6;
-  
+  t_msg.Sum = t_msg.t_S1 + t_msg.t_S2 + t_msg.t_S3 + t_msg.t_S4 + t_msg.t_S5 + t_msg.t_S6;
     
 }
 
