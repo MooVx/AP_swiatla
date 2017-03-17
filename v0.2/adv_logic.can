@@ -79,7 +79,7 @@ on message CONTROL
   }
   if(this._BASE_REQUEST==1){
     ctrl.byte(0)=0x21;  // 0b0010 0001  adv_req & good signal
-    output(ctrl);
+//    output(ctrl);
     output(t_msg);
   }
   

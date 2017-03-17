@@ -48,6 +48,7 @@ on message CONTROL
     adv_work=1; 
   if(this._OFF==1){
     off_blink=1;
+    
   }else
     off_blink=0;
     

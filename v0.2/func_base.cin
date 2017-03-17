@@ -1,7 +1,11 @@
 /*@!Encoding:1250*/
 int calc_state()
 {
-if(state==F1_S3){
+if(state == F1_S2){
+  if((t_msg.Sum-t_msg.t_S1)==0)
+    return F1_S2;
+  
+}else if(state==F1_S3){
   if(T[state]>0)
     return F1_S4;
   else
@@ -30,6 +34,10 @@ if(state==F1_S3){
 }else if(state == F2_S2){
   return F2_S4;
   
+}else if(state == F2_S4){
+  if((t_msg.Sum-t_msg.t_S2)==0)
+    return F2_S4;
+  
 }else if(state == F2_S6){
   if (t_msg.t_S3 > 0) 
   	return F3_S1;
@@ -41,6 +49,11 @@ if(state==F1_S3){
   	return F6_S1;
   else
   	return F2_S1;
+  
+}else if(state == F3_S2){
+  if((t_msg.Sum-t_msg.t_S3)==0)
+    return F3_S2;
+  
 }else if(state == F3_S4){
   if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
   	return F4_S1;
@@ -55,6 +68,10 @@ if(state==F1_S3){
   else
   	return F3_S1;
 
+}else if(state == F4_S2){
+  if((t_msg.Sum-t_msg.t_S4)==0)
+    return F4_S2;
+  
 }else if(state == F4_S4){
   if (t_msg.t_S5 > 0)
   	return F5_S1;
@@ -69,6 +86,10 @@ if(state==F1_S3){
   else
   	return F4_S1;
   
+}else if(state == F5_S2){
+  if((t_msg.Sum-t_msg.t_S5)==0)
+    return F5_S2;
+  
 }else if(state == F5_S4){
   if (t_msg.t_S6 > 0)
   	return F6_S1;
@@ -82,6 +103,10 @@ if(state==F1_S3){
   	return F4_S1;
   else
   	return F5_S1;
+  
+}else if(state == F6_S2){
+  if((t_msg.Sum-t_msg.t_S6)==0)
+    return F6_S2;
   
 }else if(state == F6_S4){
   if (t_msg.t_S1 > 0)
@@ -99,7 +124,7 @@ if(state==F1_S3){
 
 }else
   return state+1;
-
+return 0;
 }
 
 void time_message_parser(message Time th)
