@@ -1,7 +1,7 @@
 1) Legenda kolorów na obrazku z podgrafami.
 2) W fazie 1 warunek przejœcia miêdzy S3 a S4: ((T=4s) i (Praca zwyk³a)) lub ((Praca inteligentna) i (T=4s) i (t_msg.t_S2 > 0)) 
    oznacza, ¿e po odliczeniu 4s, je¿eli system pracuje bez analizowania natê¿enia ruchu lub natê¿enie ruchu na pasach A1 lub B1 jest niezerowe,
-   system nie omija nastêpnej fazy (fazy 2).
+   system nie omija nastêpnej fazy (fazy 2), zatem nie musi gasiæ œwiate³ zielonych A2 i B2.
 3) W fazie 1 warunek przejœcia miêdzy S3 a S5: (T=4s) i (Praca inteligentna)  i (t_msg.t_S2 == 0)
    oznacza, ¿e po odliczeniu 4s, je¿eli system analizuje natê¿enie ruchu i natê¿enie ruchu na pasach A1 oraz B1 jest zerowe,
    system omija fazê 2, a zatem wy³¹cza zielone œwiat³o dla pasów A2 i B2 w stanach S5 i S6.

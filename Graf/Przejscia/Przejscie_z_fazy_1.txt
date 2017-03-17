@@ -1,0 +1,11 @@
+W1 = t_msg.t_S2 > 0
+
+W2 = (t_msg.t_S2 = 0) && (t_msg.t_S3 > 0)
+
+W3 = (t_msg.t_S2 = 0) && (t_msg.t_S3 == 0) && (N_F1==1 || N_F2==1 || N_E1==1 || N_E2==1)
+
+W4 = (t_msg.t_S2 = 0) && (t_msg.t_S3 == 0) && (N_F1==0 && N_F2==0 && N_E1==0 && N_E2==0) && (t_msg.t_S5 > 0)
+
+W5 = (t_msg.t_S2 = 0) && (t_msg.t_S3 == 0) && (N_F1==0 && N_F2==0 && N_E1==0 && N_E2==0) && (t_msg.t_S5 = 0) && (t_msg.t_S6 > 0)
+
+W6 = (t_msg.t_S2 = 0) && (t_msg.t_S3 == 0) && (N_F1==0 && N_F2==0 && N_E1==0 && N_E2==0) && (t_msg.t_S5 = 0) && (t_msg.t_S6 = 0)
