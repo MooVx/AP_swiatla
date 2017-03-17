@@ -44,7 +44,7 @@ on start
 on message CONTROL
 {
   ctrl_msg=this;
-  if(this._GOOD==1)
+  if(this._ADV_REQUEST==1)
     adv_work=1; 
   if(this._OFF==1){
     off_blink=1;
@@ -95,19 +95,20 @@ on timer cycl
 {
   if(off_blink==0){
     if(adv_work==1){
+      setTimer(cycl,anim_multiplier*T_stand[state]);  //request 'mig' timer event after 500*T[state] ms
+      display_state(state);
       state=calc_state();
       if(state==F2_S1)
         state=calc_state();
     }
     else{ 
+      setTimer(cycl,anim_multiplier*T_stand[state]);  //request 'mig' timer event after 500*T[state] ms
+      display_state(state);
       state++;  
       if(state==28)
         state=F1_S1;
     }
-    
-    setTimer(cycl,anim_multiplier*T_stand[state]);  //request 'mig' timer event after 500*T[state] ms
-    display_state(state);
-    
+        
     ctrl_msg.byte(0)=0x11;  // 0b0001 0001  base_req & good signal
     output(ctrl_msg);
   }
@@ -124,5 +125,8 @@ on timer cycl
       ctrl_msg.byte(0)=0x51;  // 0b0101 0001  off & base_req & good signal
       output(ctrl_msg);
   }
+  write("stan: %d",state);
 }
+
+
 

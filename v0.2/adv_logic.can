@@ -77,9 +77,11 @@ on message CONTROL
     cnt=0;
     setTimer(control_time,20);
   }
-  if(this._BASE_REQUEST==1)
+  if(this._BASE_REQUEST==1){
+    ctrl.byte(0)=0x21;  // 0b0010 0001  adv_req & good signal
+    output(ctrl);
     output(t_msg);
-  
+  }
   
 }
 

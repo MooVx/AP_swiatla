@@ -117,9 +117,11 @@ void time_message_parser(message Time th)
     T[F4_S2]=th.t_S4;
     T[F5_S2]=th.t_S5;
     T[F6_S2]=th.t_S6;
-    
-
   }
+  if(th.Sum==0)
+    adv_work=0;
+  else
+    adv_work=1;
    write("Ustawiono czasy: S1:%d - S2:%d - S3:%d - S4:%d - S5:%d - S6:%d - ", T[F1_S2],
                                                                               T[F2_S4],
                                                                               T[F3_S2],
