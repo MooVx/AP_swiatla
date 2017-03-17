@@ -1,0 +1,123 @@
+/*@!Encoding:1250*/
+includes
+{
+  
+}
+
+variables
+{
+ msTimer mig;   //pedestrian blinking green lights timer 
+ msTimer cycl;  //main cycle timer
+ Timer req;     //request timer
+  
+ message Display panel;   //frame to display state on panel
+ int state=0;
+  
+ // table of states : (20 state, 34 different signals to display ) 
+ int dis[20][34]={{0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1},
+                  {0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1},
+                  {0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1},
+                  {0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1}};
+
+// table of states default time
+ int T_stand[20]={8, 4, 1, 1,  8, 3, 1, 8,  3, 2, 7, 4,  1, 1, 8, 3,  1, 8, 3, 1};
+ int T[20]={8, 4, 1, 1,  8, 3, 1, 8,  3, 2, 7, 4,  1, 1, 8, 3,  1, 8, 3, 1};
+
+ int i=0,j=0;
+}
+
+
+on message Time
+{
+  write("%d",this.t_S3);
+  if((!this.t_S1)&&(!this.t_S2)&&(!this.t_S3)&&(!this.t_S4)&&(!this.t_S5)&&(!this.t_S6)){
+    for(i=0;i<20;i++){
+      T[i]=T_stand[i];
+    }
+  }
+  else{
+    T[0]=this.t_S1;
+    T[4]=this.t_S2;
+    T[7]=this.t_S3;
+    T[10]=this.t_S4;
+    T[14]=this.t_S5;
+    T[17]=this.t_S6;
+    
+    setTimer(req,30);
+  }
+   write("Ustawiono czasy: S1:%d - S2:%d - S3:%d - S4:%d - S5:%d - S6:%d - ",T[0],T[4],T[7],T[10],T[14],T[17]);
+}
+
+on start
+{   
+  // first call of timers at simulatoin start:
+  setTimer(cycl,100); 
+  setTimer(mig,50); 
+}
+
+on timer mig
+{ 
+  if(state==2){     //green light should blink 
+    panel.E_G^=1;   // modify signal E_green in frame panel ( toggle - XOR func.)
+    output(panel);  //send message over CAN
+  };
+  if(state==12){    //green light should blink 
+    panel.E_G^=1;   // modify signal E_green in frame panel ( toggle - XOR func.)
+    panel.F_G^=1;   // modify signal F_green in frame panel ( toggle - XOR func.)
+    output(panel);  //send message over CAN
+  }
+    
+  setTimer(mig,100); //request 'mig' timer event after 100ms 
+}
+
+on timer req
+{
+  for(i=0;i<20;i++){
+    T[i]=T_stand[i];
+  }  
+  write("przywrócono czasy domyœlne");
+}
+
+on timer cycl
+{
+  setTimer(cycl,500*T[state]);  //request 'mig' timer event after 500*T[state] ms
+  
+  //parser, byte after byte writing raw data from dis[state] to panel message
+  for(i=0;i<=4;i++){
+    int temp=0;
+      for(j=0;j<8;j++){
+        if((i*8+j)<34)
+          if(dis[state][i*8+j])
+               temp=temp|(1<<j);
+          else
+               temp=temp&~((1<<j));
+      }
+    panel.byte(i)=temp;
+  }
+
+  //send message 'panel' over CAN
+  output(panel);
+  
+  //
+  state++;  
+  if(state==20)
+    state=0;
+
+}
+
