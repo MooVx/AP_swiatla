@@ -24,7 +24,7 @@ variables
 
   int adv_work=0;
   int tact=0;
-  int anim_multiplier =200;
+  int anim_multiplier =300;
 
 }
 

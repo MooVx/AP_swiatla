@@ -2,10 +2,11 @@
 int calc_state()
 {
 if(state == F1_S2){
-  if((t_msg.Sum-t_msg.t_S1)==0)
+  if((t_msg.Sum-t_msg.t_S1-t_msg.t_S2)==0)
     return F1_S2;
   
-}else if(state==F1_S3){
+}
+if(state==F1_S3){
   if(T[state]>0)
     return F1_S4;
   else
