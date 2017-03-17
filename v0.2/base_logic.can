@@ -22,6 +22,8 @@ variables
 
  int adv_work=0;
 
+int anim_multiplier =200;
+
 }
 
 
@@ -40,8 +42,8 @@ on start
 on message CONTROL
 {
   ctrl_msg=this;
-  
-  
+  if(this._GOOD==1)
+    adv_work=1; 
   
 }
 
@@ -84,28 +86,22 @@ on timer mig
 
 on timer cycl
 {
+  if(adv_work==1 && ctrl_msg._OFF==0){
+    state=calc_state();
+    if(state==F2_S1)
+      state=calc_state();
+  }
+  else{ 
+    state++;  
+    if(state==28)
+      state=F1_S1;
+  }
   
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  setTimer(cycl,500*T[state]);  //request 'mig' timer event after 500*T[state] ms
-
+  setTimer(cycl,anim_multiplier*T_stand[state]);  //request 'mig' timer event after 500*T[state] ms
   display_state(state);
-
   
-  //
-  state++;  
-  if(state==20)
-    state=0;
-
+  ctrl_msg.byte(0)=0x11;  // 0b0001 0001  base_req & good signal
+  output(ctrl_msg);
 }
 
 int calc_state()
