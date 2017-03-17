@@ -1,0 +1,149 @@
+/*@!Encoding:1250*/
+int calc_state()
+{
+if(state==F1_S3){
+  if(T[state]>0)
+    return F1_S4;
+  else
+    return F1_S5;
+  
+}else if((state == F1_S4)||(state == F1_S6)){
+  if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else
+  	return F1_S1;
+  
+}else if(state == F2_S1){
+  if(panel.A2_G&&panel.B2_G)
+    return F2_S3;
+  else
+    return F2_S2;
+  
+}else if(state == F2_S2){
+  return F2_S4;
+  
+}else if(state == F2_S6){
+  if (t_msg.t_S3 > 0) 
+  	return F3_S1;
+  else if  (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if  (t_msg.t_S5 > 0)	
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else
+  	return F2_S1;
+}else if(state == F3_S4){
+  if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else
+  	return F3_S1;
+
+}else if(state == F4_S4){
+  if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else
+  	return F4_S1;
+  
+}else if(state == F5_S4){
+  if (t_msg.t_S6 > 0)
+  	return F6_S1;
+  else if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else
+  	return F5_S1;
+  
+}else if(state == F6_S4){
+  if (t_msg.t_S1 > 0)
+  	return F1_S1;
+  else if (t_msg.t_S2 > 0)
+  	return F2_S1;
+  else if (t_msg.t_S3 > 0)
+  	return F3_S1;
+  else if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
+  	return F4_S1;
+  else if (t_msg.t_S5 > 0)
+  	return F5_S1;
+  else
+  	return F6_S1;
+
+}else
+  return state+1;
+
+}
+
+void time_message_parser(message Time th)
+{
+   int i=0,j=0;
+  if((!th.t_S1)&&(!th.t_S2)&&(!th.t_S3)&&(!th.t_S4)&&(!th.t_S5)&&(!th.t_S6)){
+    for(i=0;i<20;i++){
+      T[i]=T_stand[i];
+    }
+  }
+  else{
+    T[F1_S2]=th.t_S1;
+    T[F2_S4]=th.t_S2;
+    T[F3_S2]=th.t_S3;
+    T[F4_S2]=th.t_S4;
+    T[F5_S2]=th.t_S5;
+    T[F6_S2]=th.t_S6;
+    
+
+  }
+   write("Ustawiono czasy: S1:%d - S2:%d - S3:%d - S4:%d - S5:%d - S6:%d - ", T[F1_S2],
+                                                                              T[F2_S4],
+                                                                              T[F3_S2],
+                                                                              T[F4_S2],
+                                                                              T[F5_S2],
+                                                                              T[F6_S2]);
+}
+
+void display_state(int state)
+{
+   int i=0,j=0;  
+  //parser, byte after byte writing raw data from dis[state] to panel message
+  for(i=0;i<=4;i++){
+    int temp=0;
+      for(j=0;j<8;j++){
+        if((i*8+j)<34)
+          if(dis[state][i*8+j])
+               temp=temp|(1<<j);
+          else
+               temp=temp&~((1<<j));
+      }
+    panel.byte(i)=temp;
+  }
+  
+  //send message 'panel' over CAN
+  output(panel);
+}

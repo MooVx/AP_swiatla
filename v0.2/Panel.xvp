@@ -1,6 +1,31 @@
 <?xml version="1.0"?>
 <Panel Type="Vector.CANalyzer.Panels.PanelSerializer, Vector.CANalyzer.Panels.Serializer, Version=9.0.111.0, Culture=neutral, PublicKeyToken=null">
   <Object Type="Vector.CANalyzer.Panels.Runtime.Panel, Vector.CANalyzer.Panels.Common, Version=9.0.111.0, Culture=neutral, PublicKeyToken=null" Name="Panel" Children="Controls" ControlName="Panel1">
+    <Object Type="Vector.CANalyzer.Panels.Design.StaticTextControl, Vector.CANalyzer.Panels.CommonControls, Version=9.0.111.0, Culture=neutral, PublicKeyToken=null" Name="StaticTextControl1" Children="Controls" ControlName="Static Text">
+      <Property Name="Name">StaticTextControl1</Property>
+      <Property Name="Size">61, 13</Property>
+      <Property Name="Location">905, 12</Property>
+      <Property Name="Text">CRTL_OFF</Property>
+    </Object>
+    <Object Type="Vector.CANalyzer.Panels.Design.LEDControl, Vector.CANalyzer.Panels.CommonControls, Version=9.0.111.0, Culture=neutral, PublicKeyToken=null" Name="LEDControl47" ControlName="LED Control 2">
+      <Property Name="Name">LEDControl47</Property>
+      <Property Name="Size">20, 20</Property>
+      <Property Name="Location">971, 12</Property>
+      <Property Name="UsedLEDColorOn">Green</Property>
+      <Property Name="UsedLEDColorOff">Red</Property>
+      <Property Name="SymbolConfiguration">4;2;Baza;Sensor;CONTROL;_OFF;1;Baza;;-1</Property>
+      <Property Name="TabIndex">76</Property>
+    </Object>
+    <Object Type="Vector.CANalyzer.Panels.Design.LEDBand, Vector.CANalyzer.Panels.CommonControls, Version=9.0.111.0, Culture=neutral, PublicKeyToken=null" Name="LEDBand1" ControlName="LED Band">
+      <Property Name="Name">LEDBand1</Property>
+      <Property Name="Size">300, 30</Property>
+      <Property Name="Location">857, -78</Property>
+      <Property Name="Color">Orange</Property>
+      <Property Name="LedBandLength">270</Property>
+      <Property Name="StartingPoint">15;15</Property>
+      <Property Name="SymbolConfiguration">
+      </Property>
+    </Object>
     <Object Type="Vector.CANalyzer.Panels.Design.SwitchControl, Vector.CANalyzer.Panels.CommonControls, Version=9.0.111.0, Culture=neutral, PublicKeyToken=null" Name="SwitchControl4" ControlName="Switch/Indicator">
       <Property Name="Name">SwitchControl4</Property>
       <Property Name="Size">23, 30</Property>
