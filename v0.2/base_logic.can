@@ -26,10 +26,14 @@ variables
   int adv_work=0;
   int tact=0;
 <<<<<<< HEAD
+<<<<<<< HEAD
   int anim_multiplier =300;
 =======
 int anim_multiplier =200;
 >>>>>>> origin/master
+=======
+  int anim_multiplier =200;
+>>>>>>> parent of e64b144... finał na piątek, nadal nie dokońca logika
 =======
   int anim_multiplier =200;
 >>>>>>> parent of e64b144... finał na piątek, nadal nie dokońca logika
