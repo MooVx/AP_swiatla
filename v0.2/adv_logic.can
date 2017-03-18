@@ -115,14 +115,22 @@ int calculate_k(message Sensor in, int phase)
     case 1:
       if( in.N_A2 > in.N_B2 )  n = in.N_A2;
       else n = in.N_B2;
+      if ( n==0 && (in.N_E1==1 || in.N_E2==1) )  n = 1;
       break;
     
     case 2:
-      if( in.N_A1 > in.N_A2 )  max = in.N_A1;
-      else max = in.N_A2;
-      if( in.N_B1 > max )  max = in.N_B1;
-      if( in.N_B2 > max )  max = in.N_B2;
-      n = max;
+      if ( (in.N_A1==0) && (in.N_B1==0) && (in.N_E1==1 || in.N_E2==1) ) 
+      {
+        n=0;
+      }
+      else
+      {
+        if( in.N_A1 > in.N_A2 )  max = in.N_A1;
+        else max = in.N_A2;
+        if( in.N_B1 > max )  max = in.N_B1;
+        if( in.N_B2 > max )  max = in.N_B2;
+        n = max;
+      }
       break;
     
     case 3:
