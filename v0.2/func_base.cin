@@ -16,6 +16,8 @@ if(state==F1_S3){
 if((state == F1_S4)){
   if (t_msg.t_S2 > 0)
   	return F2_S1;
+  else if (t_msg.t_S3 >0)
+    return F1_S5;
   else if (sens.N_F1==1 || sens.N_F2==1 || sens.N_E1==1 || sens.N_E2==1)
   	return F4_S1;
   else if (t_msg.t_S5 > 0)
