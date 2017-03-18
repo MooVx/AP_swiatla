@@ -1,20 +1,4 @@
 [NStatePersistence]
 Signature=VectorStatePersistence
 [VGlobalMeasurementIndex]
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 mMeasurementIndex=100
-=======
-<<<<<<< HEAD
-mMeasurementIndex=95
-=======
-mMeasurementIndex=56
->>>>>>> parent of 877af3f... działajacy system z niefajną logiką
->>>>>>> origin/master
-=======
-mMeasurementIndex=95
->>>>>>> parent of e64b144... finał na piątek, nadal nie dokońca logika
-=======
-mMeasurementIndex=95
->>>>>>> parent of e64b144... finał na piątek, nadal nie dokońca logika
