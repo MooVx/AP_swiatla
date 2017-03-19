@@ -23,9 +23,18 @@ on timer control_time
 {
   if(cnt>1){
     ctrl.byte(0)=0x44;   // 0b0100 0100  adv_error & off signal
+    write("\n\n communication error with base!!!");
+    output(ctrl);
   } 
-  ctrl.byte(0)=0x21;  // 0b0010 0001  adv_req & good signal
-  output(ctrl);
+  if(@sysvar::adv_block==0)
+      if(@sysvar::off_lights==1){
+        ctrl.byte(0)=0x61;  // 0b0110 0001  off & adv_req & good signal
+        output(ctrl);
+      }
+      else{
+        ctrl.byte(0)=0x21;  // 0b0010 0001  adv_req & good signal
+        output(ctrl);
+      }
   setTimer(control_time,10);
   cnt++;
 }
@@ -79,8 +88,13 @@ on message CONTROL
   }
   if(this._BASE_REQUEST==1){
     ctrl.byte(0)=0x21;  // 0b0010 0001  adv_req & good signal
-//    output(ctrl);
-    output(t_msg);
+    if(@sysvar::adv_block==0){
+      output(t_msg);
+      if(@sysvar::off_lights==1){
+        ctrl.byte(0)=0x61;  // 0b0110 0001  off & adv_req & good signal
+        output(ctrl);
+      }
+    }
   }
   
 }

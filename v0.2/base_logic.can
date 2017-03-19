@@ -26,6 +26,8 @@ variables
   int tact=0;
   int anim_multiplier =300;
 
+
+  
 }
 
 
@@ -36,7 +38,8 @@ on start
   setTimer(cycl,100); 
   setTimer(mig,50); 
   ctrl_msg.byte(0)=0x11;  // 0b0001 0001  base_req & good signal
-  output(ctrl_msg);
+  if(@sysvar::base_block==0)
+    output(ctrl_msg);
   
 }
 
@@ -72,7 +75,9 @@ on timer req
 {
   adv_work=0;
   ctrl_msg.byte(0)=0x02;   // 0b0000 0010  base_error
-  output(ctrl_msg);
+  write("\n\n communication error with adv!!!\n adv logic off");
+  if(@sysvar::base_block==0)
+    output(ctrl_msg);
 }
 
 on timer mig
@@ -111,7 +116,8 @@ on timer cycl
     }
         
     ctrl_msg.byte(0)=0x11;  // 0b0001 0001  base_req & good signal
-    output(ctrl_msg);
+    if(@sysvar::base_block==0)
+      output(ctrl_msg);
   }
   else{
       if(tact)
@@ -123,10 +129,12 @@ on timer cycl
       else
         tact=1; 
       setTimer(cycl,anim_multiplier);
-      ctrl_msg.byte(0)=0x51;  // 0b0101 0001  off & base_req & good signal
-      output(ctrl_msg);
+      ctrl_msg.byte(0)=0x11;  // 0b0001 0001  off & base_req & good signal
+      if(@sysvar::base_block==0)
+        output(ctrl_msg);
   }
   write("stan: %d",state);
+ @sysvar::type=state;
 }
 
 

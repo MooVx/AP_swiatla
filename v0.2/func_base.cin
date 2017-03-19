@@ -1,4 +1,9 @@
 /*@!Encoding:1250*/
+variables
+{
+  
+}
+
 int calc_state()
 {
 if(state == F1_S2){
